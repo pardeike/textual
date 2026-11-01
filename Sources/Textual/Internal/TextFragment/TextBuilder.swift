@@ -22,9 +22,12 @@ extension TextFragment {
 
     @ObservationIgnored private let content: Content
     @ObservationIgnored private let cache: NSCache<KeyBox<[AttachmentKey: CGSize]>, Box<Text>>
+    @ObservationIgnored private(set) var containerSize: CGSize?
 
-    init(_ content: Content, environment: TextEnvironmentValues) {
-      let attachmentSizes = content.attachmentSizes(for: .unspecified, in: environment)
+    init(_ content: Content, environment: TextEnvironmentValues, containerSize: CGSize? = nil) {
+      self.containerSize = containerSize
+      let proposal = containerSize.map { ProposedViewSize($0) } ?? .unspecified
+      let attachmentSizes = content.attachmentSizes(for: proposal, in: environment)
 
       self.text = Text(
         attributedString: content,
@@ -39,6 +42,7 @@ extension TextFragment {
     }
 
     func sizeChanged(_ size: CGSize, environment: TextEnvironmentValues) {
+      containerSize = size
       let attachmentSizes = content.attachmentSizes(for: .init(size), in: environment)
       let cacheKey = KeyBox(attachmentSizes)
 

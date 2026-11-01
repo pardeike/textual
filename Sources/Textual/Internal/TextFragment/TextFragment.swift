@@ -43,7 +43,9 @@ struct TextFragment<Content: AttributedStringProtocol>: View {
         textBuilder.sizeChanged(size, environment: textEnvironment)
       }
       .onChange(of: content, initial: true) { _, newValue in
-        self.textBuilder = TextBuilder(newValue, environment: textEnvironment)
+        // Loaded attachments must start at the measured width, without a natural-size frame.
+        self.textBuilder = TextBuilder(
+          newValue, environment: textEnvironment, containerSize: textBuilder?.containerSize)
       }
       .modifier(TextSelectionBackground())
       .modifier(AttachmentOverlay(attachments: content.attachments()))
