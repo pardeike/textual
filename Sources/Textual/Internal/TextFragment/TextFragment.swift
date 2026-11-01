@@ -70,10 +70,17 @@ extension CoordinateSpaceProtocol where Self == NamedCoordinateSpace {
   static var textContainer: NamedCoordinateSpace {
     .named("textContainer")
   }
+
+  static var attachmentContainer: NamedCoordinateSpace {
+    .named("textual.attachmentContainer")
+  }
 }
 
 extension GeometryProxy {
   fileprivate var textContainerSize: CGSize? {
-    bounds(of: .textContainer)?.size
+    guard let bounds = bounds(of: .textContainer) else { return nil }
+    // Local content excludes list markers, quote padding and table-cell padding.
+    let localWidth = self.bounds(of: .attachmentContainer)?.width ?? bounds.width
+    return CGSize(width: min(bounds.width, localWidth), height: bounds.height)
   }
 }

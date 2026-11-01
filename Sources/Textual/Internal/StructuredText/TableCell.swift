@@ -6,10 +6,12 @@ extension StructuredText {
 
     private let content: AttributedSubstring
     private let identifier: TableCell.Identifier
+    private let alignment: HorizontalAlignment
 
-    init(_ content: AttributedSubstring, row: Int, column: Int) {
+    init(_ content: AttributedSubstring, row: Int, column: Int, alignment: HorizontalAlignment) {
       self.content = content
       self.identifier = .init(row: row, column: column)
+      self.alignment = alignment
     }
 
     var body: some View {
@@ -31,7 +33,13 @@ extension StructuredText {
 
     private var label: some View {
       WithInlineStyle(AttributedString(content)) {
-        TextFragment($0)
+        if $0.runs.contains(where: { $0.imageURL != nil }) {
+          TextFragment($0)
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
+            .coordinateSpace(.attachmentContainer)
+        } else {
+          TextFragment($0)
+        }
       }
     }
 

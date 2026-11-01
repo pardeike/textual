@@ -55,7 +55,7 @@ extension StructuredText {
               let cellRun = columnRuns[columnIndex]
               let cellContent = rowContent[cellRun.range]
 
-              TableCell(cellContent, row: rowIndex, column: columnIndex)
+              TableCell(cellContent, row: rowIndex, column: columnIndex, alignment: alignment(for: columnIndex))
                 .gridColumnAlignment(alignment(for: columnIndex))
             }
           }

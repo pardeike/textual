@@ -17,6 +17,8 @@ extension StructuredText {
         HStack(alignment: .firstTextCenter, spacing: $0) {
           configuration.marker
           configuration.block
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            .coordinateSpace(.attachmentContainer)
         }
       }
     }
